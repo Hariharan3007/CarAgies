@@ -19,19 +19,14 @@ public class VehicleHealthReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private LocalDateTime reportDate;
-
     @Lob
     private String summary; // short textual summary
-
     @Lob
     private String advisory; // detailed advice & recommendations
-
     private Integer tyreScore; // 0-100
     private Integer engineScore;
     private Integer brakesScore;
     private Integer electricalScore;
-
     private BigDecimal estimatedRepairCost;
 }

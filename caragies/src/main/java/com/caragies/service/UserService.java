@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -137,4 +138,10 @@ public class UserService implements UserServiceInterface {
                                 serviceRequest.getFinalCost()))
                 .collect(Collectors.toList());
     }
+    private String generate6Digit() {
+        Random r = new Random();
+        int n = 100000 + r.nextInt(900000);
+        return String.valueOf(n);
+    }
+
 }

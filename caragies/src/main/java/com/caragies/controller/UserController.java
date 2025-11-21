@@ -6,8 +6,10 @@ import com.caragies.entitydto.UserDto;
 import com.caragies.entitymodel.Car;
 import com.caragies.entitymodel.ServiceRequest;
 import com.caragies.entitymodel.Users;
+import com.caragies.repositories.UserRepository;
 import com.caragies.security.JwtUtil;
 import com.caragies.service.UserService;
+import com.caragies.service.VerificationService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpRequest;
@@ -17,20 +19,25 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
+
 public class UserController {
 
     private UserService userService;
 
     private JwtUtil jwtUtil;
+    private final UserRepository userRepo;
 
-    public String token = null;
+   private VerificationService verificationService;
 
-    public UserController(JwtUtil jwtUtil,UserService userService) {
+    public UserController(JwtUtil jwtUtil,UserRepository userRepo,UserService userService,VerificationService verificationService) {
         this.jwtUtil = jwtUtil;
         this.userService = userService;
+        this.verificationService=verificationService;
+        this.userRepo = userRepo;
     }
 
     @PostMapping("/signup")
@@ -40,8 +47,8 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@RequestBody Users user){
-        token = userService.login(user);
-        return token;
+        return   userService.login(user);
+
     }
 
     @GetMapping("/profile/view")
@@ -66,7 +73,8 @@ public class UserController {
     }
 
     @GetMapping("/car/request/view")
-    public List<ServiceRequestDto> viewAllRequest(){
+    public List<ServiceRequestDto> viewAllRequest()
+    {
        return userService.viewAllRequest(getUsername());
     }
 
@@ -74,4 +82,30 @@ public class UserController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getName();
     }
+    @GetMapping("/otp")
+    public String optsent(@RequestParam String email)
+
+    {
+        verificationService.createAndSendCode(email);
+        return "successfully mail otp sent to the "+email;
+
+    }
+    @PostMapping("/verify-code")
+    public ResponseEntity<?> verifyCodeAndIssueToken(@RequestBody Map<String,String> body) {
+        String email = body.get("email");
+        String code = body.get("code");
+        if (email == null || code == null) {
+            return ResponseEntity.badRequest().body(Map.of("error","email and code required"));
+        }
+        boolean ok = verificationService.verifyCode(email, code);
+        if (!ok) {
+            return ResponseEntity.status(401).body(Map.of("error","invalid or expired code"));
+        }
+        var userOpt = userRepo.findByEmail(email);
+        if (userOpt.isEmpty()) return ResponseEntity.status(404).body(Map.of("error","user not found"));
+        Users user = userOpt.get();
+        String jwt = jwtUtil.createToken(user.getUsername(),user.getRole());
+        return ResponseEntity.ok(Map.of("token", jwt));
+    }
 }
+

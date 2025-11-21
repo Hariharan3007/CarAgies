@@ -32,7 +32,7 @@ public class SecurityConfig {
         return security
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/admin/signup", "/user/signup", "/user/login", "/vendor/login").permitAll()
+                        .requestMatchers("/admin/signup", "/user/signup", "/user/login", "/vendor/login","/user/verify-code","/user/otp").permitAll()
                         .requestMatchers("/admin/**").hasRole("admin")
                         .requestMatchers("/vendor/**").hasRole("vendor")
                         .requestMatchers("/user/**").hasAnyRole("user", "admin","vendor")
@@ -58,6 +58,5 @@ public class SecurityConfig {
         dao.setUserDetailsService(securityService);
         return dao;
     }
-
 
 }
