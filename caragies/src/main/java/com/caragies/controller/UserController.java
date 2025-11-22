@@ -94,6 +94,7 @@ public class UserController {
     public ResponseEntity<?> verifyCodeAndIssueToken(@RequestBody Map<String,String> body) {
         String email = body.get("email");
         String code = body.get("code");
+        String newPassword=body.get("newPassword");
         if (email == null || code == null) {
             return ResponseEntity.badRequest().body(Map.of("error","email and code required"));
         }
@@ -104,6 +105,8 @@ public class UserController {
         var userOpt = userRepo.findByEmail(email);
         if (userOpt.isEmpty()) return ResponseEntity.status(404).body(Map.of("error","user not found"));
         Users user = userOpt.get();
+        user.setPassword(newPassword);
+        userRepo.save(user);
         String jwt = jwtUtil.createToken(user.getUsername(),user.getRole());
         return ResponseEntity.ok(Map.of("token", jwt));
     }

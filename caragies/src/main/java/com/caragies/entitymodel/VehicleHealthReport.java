@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Data
@@ -19,7 +20,7 @@ public class VehicleHealthReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDateTime reportDate;
+    private LocalDateTime reportDate=LocalDateTime.now();
     @Lob
     private String summary; // short textual summary
     @Lob
@@ -29,4 +30,7 @@ public class VehicleHealthReport {
     private Integer brakesScore;
     private Integer electricalScore;
     private BigDecimal estimatedRepairCost;
+    @OneToOne
+    private  Car car;
+
 }
