@@ -12,11 +12,15 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class AdminService {
+
     private ServiceRequestRepository serviceRequestRepository;
+
     private UserRepository userRepository;
+
     public List<ServiceRequest> getRequest() {
         return serviceRequestRepository.findAll();
     }
+
     public String removeUser(String userName)
     {
         Optional<Users> user=userRepository.findByUsername(userName);

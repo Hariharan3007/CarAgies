@@ -1,0 +1,33 @@
+<div class="signup-box">
+
+  <h2>Create Account</h2>
+
+  <input type="text" placeholder="Full Name" [(ngModel)]="name">
+
+  <input type="text"
+         placeholder="Username"
+         [(ngModel)]="username"
+         (input)="onUsernameChange()">
+
+  <!-- Username validation -->
+  <p *ngIf="usernameAvailable === true" style="color: green;">
+    ✔ Username available
+  </p>
+  <p *ngIf="usernameAvailable === false" style="color: red;">
+    ✘ Username already taken
+  </p>
+
+  <input type="password" placeholder="Password" [(ngModel)]="password">
+
+  <input type="text" placeholder="Phone Number" [(ngModel)]="phone">
+
+  <select [(ngModel)]="role">
+    <option value="" disabled selected>Select Role</option>
+    <option value="admin">Admin</option>
+    <option value="user">User</option>
+    <option value="servicer">Service Provider</option>
+  </select>
+
+  <button (click)="submitSignup()">Create Account</button>
+
+</div>

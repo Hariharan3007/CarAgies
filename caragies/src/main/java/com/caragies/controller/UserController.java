@@ -45,10 +45,14 @@ public class UserController {
         return userService.signup(user);
     }
 
+    @GetMapping("/check-username/{username}")
+    public boolean checkUserName(@PathVariable String username){
+        return !userRepo.findByUsername(username).isPresent();
+    }
+
     @PostMapping("/login")
     public String login(@RequestBody Users user){
-        return   userService.login(user);
-
+        return userService.login(user);
     }
 
     @GetMapping("/profile/view")
