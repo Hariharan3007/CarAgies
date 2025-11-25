@@ -52,7 +52,7 @@ public class VehicleHealthReportEmailService {
         }
     }
 //    @Scheduled(cron = "0 35 13 * * *")
-   @Scheduled(fixedRate = 10000)
+   @Scheduled(fixedRate = 1000000000)
    // @Scheduled(cron = "0 0 9 * * *")  // every day at 09:00
     public void sendDailyReports() {
         LocalDate yesterday = LocalDate.now().minusDays(1);

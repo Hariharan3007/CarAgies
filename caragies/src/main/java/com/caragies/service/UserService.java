@@ -53,6 +53,10 @@ public class UserService implements UserServiceInterface {
         String password = user.getPassword();
         String encodedPassword = passwordEncoder.encode(password);
         user.setPassword(encodedPassword);
+        // Set default role if not provided
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("USER");
+        }
         try {
             Users isUser = userRepository.save(user);
             return "successfully created";
@@ -61,22 +65,15 @@ public class UserService implements UserServiceInterface {
         }
     }
 
-
-
     @Override
     public String login(Users user) {
         String username = user.getUsername();
-        System.out.println(username);
         String password = user.getPassword();
-        System.out.println(password);
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
         Authentication auth = authenticationManager.authenticate(token);
         try {
             if (auth.isAuthenticated()) {
                 String role = userRepository.findByUsername(username).get().getRole();
-                if(!(user.getRole().equals(role))){
-                    return "Invalid Credentials";
-                }
                 return jwtUtil.createToken(username, role);
             }
         }catch (Exception e){
@@ -107,7 +104,7 @@ public class UserService implements UserServiceInterface {
                 car.getId(),
                 car.getVin(),
                 car.getMake(),
-                car.getModel(),
+                car.getMake(),
                 car.getYearOfManufacture(),
                 car.getUsers().getName()))
                 .collect(Collectors.toList());

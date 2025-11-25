@@ -39,20 +39,16 @@ public class UserController {
         this.verificationService=verificationService;
         this.userRepo = userRepo;
     }
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/signup")
     public String signup(@RequestBody Users user){
         return userService.signup(user);
     }
 
-    @GetMapping("/check-username/{username}")
-    public boolean checkUserName(@PathVariable String username){
-        return !userRepo.findByUsername(username).isPresent();
-    }
-
     @PostMapping("/login")
     public String login(@RequestBody Users user){
-        return userService.login(user);
+        return   userService.login(user);
+
     }
 
     @GetMapping("/profile/view")
@@ -60,12 +56,12 @@ public class UserController {
         return userService.viewProfile(getUsername());
     }
 
-    @PostMapping("car/add")
+    @PostMapping("/car/add")
     public String addMyCar(@RequestBody Car car){
         return userService.addMyCar(car, getUsername());
     }
 
-    @GetMapping("car/view")
+    @GetMapping("/car/view")
     public List<CarDto> viewMyCars(){
         return userService.viewMyCars(getUsername());
     }
@@ -83,17 +79,18 @@ public class UserController {
     }
 
     private String getUsername(){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("User: " + auth.getName());
+        auth.getAuthorities().forEach(a -> System.out.println("Authority: " + a.getAuthority()));
         return auth.getName();
-    }
+        }
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/otp")
-    public String optsent(@RequestParam String email)
-
-    {
+    public String optsent(@RequestParam String email) {
         verificationService.createAndSendCode(email);
-        return "successfully mail otp sent to the "+email;
-
+        return "successfully mail otp sent to the " + email;
     }
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/verify-code")
     public ResponseEntity<?> verifyCodeAndIssueToken(@RequestBody Map<String,String> body) {
         String email = body.get("email");

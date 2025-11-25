@@ -20,9 +20,20 @@ public class SecurityService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Users users = userRepository.findByUsername(username).get();
-        SimpleGrantedAuthority grantedAuthority=new SimpleGrantedAuthority(users.getRole());
-        User user = new User(users.getUsername(), users.getPassword(), Collections.singleton(grantedAuthority));
-        return user;
+        Users users = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+
+        // Store roles in DB as "USER", "ADMIN", "VENDOR"
+        String role = users.getRole().toUpperCase();  // "ADMIN"
+
+        SimpleGrantedAuthority grantedAuthority =
+                new SimpleGrantedAuthority(role);      // authority = "ADMIN"
+
+        return new org.springframework.security.core.userdetails.User(
+                users.getUsername(),
+                users.getPassword(),
+                Collections.singleton(grantedAuthority)
+        );
     }
+
 }
