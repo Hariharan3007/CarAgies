@@ -1,0 +1,16 @@
+<div class="dashboard-wrap">
+  <div class="card">
+    <h2>Welcome</h2>
+    <p *ngIf="username">Signed in as <strong>{{ username }}</strong></p>
+
+    <div class="actions">
+      <button (click)="addCar()">Add Car</button>
+      <button (click)="sentRequests()">Sent Requests</button>
+      <button (click)="viewCars()">View Cars</button>
+    </div>
+
+    <div class="logout">
+      <button class="btn-logout" (click)="logout()">Logout</button>
+    </div>
+  </div>
+</div>

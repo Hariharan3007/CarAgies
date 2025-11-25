@@ -1,0 +1,12 @@
+.vc-wrapper { display:flex; align-items:center; justify-content:center; min-height:280px; padding:20px; }
+.vc-card { width:100%; max-width:520px; background: linear-gradient(180deg,#ffffff,#f8fafc); border-radius:14px; box-shadow: 0 12px 40px rgba(2,6,23,0.08); padding:22px; }
+.vc-header h3 { margin:0 0 6px 0; }
+.muted { color:#6b7280; margin:0 0 12px 0; }
+.vc-form .field { margin-bottom:12px; }
+label { display:block; font-weight:600; margin-bottom:6px; }
+input { width:100%; padding:10px; border-radius:8px; border:1px solid #e6eef8; box-sizing:border-box; }
+button.primary { width:100%; padding:12px; border-radius:10px; border:none; background:linear-gradient(90deg,#0ea5e9,#3b82f6); color:white; font-weight:700; }
+.vc-footer { margin-top:12px; display:flex; justify-content:space-between; align-items:center; }
+.message { font-size:0.95rem; }
+.message.error { color:#b91c1c; }
+.back a { color:#2563eb; text-decoration:none; font-weight:600; }

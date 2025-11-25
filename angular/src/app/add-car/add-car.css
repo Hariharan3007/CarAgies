@@ -1,0 +1,13 @@
+.add-car-wrap { display:flex; justify-content:center; margin-top:30px }
+.card { width:420px; padding:18px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.08); background:#fff }
+.card h2 { margin-top:0 }
+form { display:flex; flex-direction:column }
+label { font-size:13px; margin-top:10px }
+input, select { padding:8px; font-size:14px; margin-top:6px; border:1px solid #ddd; border-radius:4px }
+.actions { display:flex; gap:10px; margin-top:14px }
+button { padding:8px 12px; border:none; border-radius:4px; cursor:pointer }
+button[disabled] { opacity:0.6; cursor:default }
+.btn-cancel { background:#eee }
+.server-msg { margin-top:12px; font-weight:600 }
+.server-msg.err { color:#c00 }
+.error { color:#c00; font-size:12px }

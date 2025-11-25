@@ -1,0 +1,32 @@
+<div class="vc-wrapper">
+  <div class="vc-card">
+    <div class="vc-header">
+      <h3>Reset Your Password</h3>
+      <p class="muted">Enter the code sent to your account and choose a new password.</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="vc-form">
+      <div class="field">
+        <label>Account (email)</label>
+        <input formControlName="email" placeholder="email address" />
+      </div>
+
+      <div class="field">
+        <label>Verification Code</label>
+        <input formControlName="code" placeholder="e.g. 123456" />
+      </div>
+
+      <div class="field">
+        <label>New Password</label>
+        <input type="password" formControlName="newPassword" placeholder="New password" />
+      </div>
+
+      <button class="primary" type="submit" [disabled]="loading">{{ loading ? 'Processing...' : 'Reset Password' }}</button>
+    </form>
+
+    <div class="vc-footer">
+      <p class="message" *ngIf="message" [class.error]="error">{{ message }}</p>
+      <p class="back"><a routerLink="/login">Back to Login</a></p>
+    </div>
+  </div>
+</div>
