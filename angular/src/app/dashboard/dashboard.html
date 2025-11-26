@@ -1,16 +1,35 @@
-<div class="dashboard-wrap">
-  <div class="card">
-    <h2>Welcome</h2>
-    <p *ngIf="username">Signed in as <strong>{{ username }}</strong></p>
 
-    <div class="actions">
-      <button (click)="addCar()">Add Car</button>
-      <button (click)="sentRequests()">Sent Requests</button>
-      <button (click)="viewCars()">View Cars</button>
+<router-outlet></router-outlet>
+
+<div class="dashboard">
+
+    <button (click)="viewMyProfile()">
+    <div class="view-profile">
+        <img src="icons8-profile-48.png" alt="View Profile">
+        <span>View My Profile</span>
     </div>
+    </button>
 
+    <button (click)="add_car()">
+    <div class="add-car">
+        <img src="transport_12942370.png" alt="Add Car">
+        <span>Add New Car</span>
+    </div>
+   </button>
+
+   <button (click)="view_car()">
+    <div class="view-car">
+        <img src="searching-car_75823.png" alt="View Car">
+        <span>View My Car</span>
+    </div>
+   </button>
+
+   <button (click)="logout()">
     <div class="logout">
-      <button class="btn-logout" (click)="logout()">Logout</button>
+        <img src="log-out_5728883.png" alt="Logout">
+        <span>Logout</span>
     </div>
-  </div>
+   </button>
+
+
 </div>

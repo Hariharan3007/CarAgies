@@ -1,69 +1,44 @@
 import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './signup.html',
-  styleUrls: ['./signup.css'],
+  styleUrls: ['./signup.scss']
 })
-export class SignupComponent {
-  private fb = inject(FormBuilder);
-  private http = inject(HttpClient);
-  private auth = inject(AuthService);
-  private router = inject(Router);
+export class Signup {
+  fb = inject(FormBuilder);
+  http = inject(HttpClient);
+  router = inject(Router);
 
   signupForm: FormGroup = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(2)]],
-    username: ['', [Validators.required, Validators.minLength(4)]],
+    name: ['', Validators.required],
+    username: ['', Validators.required],
     password: ['', [Validators.required, Validators.minLength(6)]],
     email: ['', [Validators.required, Validators.email]],
     phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-    role: ['USER', [Validators.required]],
+    role: ['USER', Validators.required]
   });
-
-  loading = false;
-  serverMessage: string | null = null;
-  serverError = false;
 
   get f() {
     return this.signupForm.controls;
   }
 
   submit() {
-    if (this.signupForm.invalid) {
-      this.signupForm.markAllAsTouched();
-      return;
-    }
+    if (this.signupForm.invalid) return;
 
-    this.loading = true;
-    this.serverMessage = null;
-    this.serverError = false;
-
-    this.auth.signup(this.signupForm.value).subscribe({
-      next: (res: string) => {
-        this.loading = false;
-        this.serverMessage = res;
-        this.serverError = false;
-        this.signupForm.reset();
-        this.signupForm.patchValue({ role: 'USER' });
-        setTimeout(() => this.router.navigate(['/login']), 800);
-      },
-      error: (err: any) => {
-        this.loading = false;
-        this.serverError = true;
-        this.serverMessage = err?.error || 'Something went wrong. Please try again.';
-      },
+    this.http.post(
+      "http://localhost:8080/user/signup",
+      this.signupForm.value,
+      { responseType: "text" }
+    ).subscribe({
+      next: () => this.router.navigate(['/login']),
+      error: (err) => alert("Error: " + err.error)
     });
   }
 }

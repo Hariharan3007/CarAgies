@@ -14,6 +14,7 @@ public class CarDto {
     private String vin; // vehicle identification number
     private String make;
     private String model;
+    private String fuelType;
     private Integer yearOfManufacture;
     private String owner;
 }

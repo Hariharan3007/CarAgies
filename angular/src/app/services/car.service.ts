@@ -8,6 +8,7 @@ export class CarService {
   private base = '/user';
 
   addCar(car: any): Observable<string> {
-    return this.http.post(`${this.base}/car/add`, car, { responseType: 'text' });
+    //return this.http.post(`${this.base}/car/add`, car, { responseType: 'text' });
+    return this.http.post('http://localhost:8080/user/car/add', car, {responseType: 'text'});
   }
 }

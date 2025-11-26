@@ -1,24 +1,29 @@
+<div class="page">
 <div class="container">
-  <h2>Login</h2>
-
-  <div class="message-area">
+    <div class="message-area">
     <p class="success" *ngIf="successMessage">✓ {{ successMessage }}</p>
     <p class="error" *ngIf="errorMessage">✕ {{ errorMessage }}</p>
   </div>
 
-  <form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
-    <label>Username</label>
-    <input type="text" formControlName="username" placeholder="Enter username" />
-
-    <label>Password</label>
-    <input type="password" formControlName="password" placeholder="Enter password" />
-
-    <button type="submit" [disabled]="loading">
-      {{ loading ? 'Logging in...' : 'Login' }}
-    </button>
-  </form>
-
-  <p class="forgot"><a routerLink="/forgot-password">Forgot Password?</a></p>
-
-  <p class="signup-link">Don't have an account? <a routerLink="/signup">Sign up</a></p>
+    <form [formGroup]="loginForm">
+        <div>
+            <label for="username">username</label>
+            <br>
+            <input type="text" placeholder="username" formControlName="username">
+        </div>
+        <div>
+            <label for="password">password</label>
+            <br>
+            <input type="text" placeholder="password" formControlName="password">
+        </div>
+        <div>
+            <button type="button" [disabled]="loading" (click)="onLogin()">{{loading? 'Loggin in...' : 'Login' }} </button>
+        </div>
+        
+    </form>
+    <div>
+            <p class="forgot"><a routerLink="/forgot-password">Forgot Password?</a></p>
+        </div>
+        <p class="signup-link">Don't have an account? <a routerLink="/signup">Sign up</a></p>
+</div>
 </div>

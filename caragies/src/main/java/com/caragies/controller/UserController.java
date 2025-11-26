@@ -47,17 +47,19 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@RequestBody Users user){
-        return   userService.login(user);
+        return userService.login(user);
 
     }
 
     @GetMapping("/profile/view")
     public UserDto viewProfile(){
+        System.out.println("Profile hit");
         return userService.viewProfile(getUsername());
     }
 
     @PostMapping("/car/add")
     public String addMyCar(@RequestBody Car car){
+        System.out.println("controller hit");
         return userService.addMyCar(car, getUsername());
     }
 

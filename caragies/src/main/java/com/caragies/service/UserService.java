@@ -88,12 +88,15 @@ public class UserService implements UserServiceInterface {
     }
 
     public String addMyCar(Car car, String username) {
+        System.out.println("Service hit");
         Optional<Car> isCarAvailable = carRepository.findByVin(car.getVin());
         if(isCarAvailable.isPresent()){
+            System.out.println("returned");
             return "Check with Registration Number";
         }
         car.setUsers(getUser(username));
         carRepository.save(car);
+        System.out.println("car added");
         return "Car added successfully";
     }
 
@@ -105,6 +108,7 @@ public class UserService implements UserServiceInterface {
                 car.getVin(),
                 car.getMake(),
                 car.getMake(),
+                car.getFuelType(),
                 car.getYearOfManufacture(),
                 car.getUsers().getName()))
                 .collect(Collectors.toList());
