@@ -1,0 +1,92 @@
+.signup-page {
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0c0f24, #1a237e);
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(3px);
+}
+
+.card {
+  position: relative;
+  width: 350px;
+  padding: 25px;
+  background: rgba(0,0,0,0.8);
+  border-radius: 12px;
+  color: white;
+  z-index: 10;
+}
+
+.card .title {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 22px;
+  color: white;
+}
+
+label {
+  margin-top: 10px;
+  display: block;
+  font-size: 14px;
+  color: #ddd;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+input::placeholder {
+  color: #bbb;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 18px;
+  background: #3d6cff;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #666;
+}
+
+.error {
+  color: #ff6b6b;
+  font-size: 12px;
+}
+
+.footnote {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.footnote a{
+  color: #8ab4ff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+form select option{
+   background-color: rgba(255,255,255,0.1);
+   color:black;
+}

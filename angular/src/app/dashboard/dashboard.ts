@@ -1,39 +1,33 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { HttpClient } from '@angular/common/http';
+import { Component, inject } from '@angular/core';
+import { Router, RouterOutlet, RouterLinkWithHref } from "@angular/router";
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [RouterOutlet],
   templateUrl: './dashboard.html',
-  styleUrls: ['./dashboard.css']
+  styleUrl: './dashboard.scss',
 })
-export class DashboardComponent {
-  username: string | null = null;
+export class Dashboard {
 
-  constructor(private router: Router, private auth: AuthService) {
-    // try to read username from navigation state or token (if available)
-    const nav = this.router.getCurrentNavigation?.();
-    const state = nav?.extras?.state as any;
-    if (state?.username) this.username = state.username;
+  http = inject(HttpClient);
+  router = inject(Router);
+
+  viewMyProfile(){
+    this.router.navigate(['profile'])
   }
 
-  addCar() {
-    this.router.navigate(['/add-car']);
+  add_car(){
+      this.router.navigateByUrl("add-car");
   }
 
-  sentRequests() {
-    this.router.navigate(['/sent-requests']);
+  view_car(){
+      this.router.navigateByUrl("view-car");
   }
 
-  viewCars() {
-    this.router.navigate(['/view-car']);
+  logout(){
+    localStorage.removeItem('auth_token');
+    this.router.navigate(['']);
   }
 
-  logout() {
-    this.auth.logout();
-    this.router.navigate(['/login']);
-  }
 }

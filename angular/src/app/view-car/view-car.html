@@ -1,0 +1,36 @@
+<div class="cars-page">
+<button (click)="goBack()">Back</button>
+  <div class="cars-header">
+    <h1>Your Cars</h1>
+    <p class="subtitle">All cars linked to your account.</p>
+  </div>
+
+  <div *ngIf="loading" class="status">Loading cars...</div>
+  <div *ngIf="errorMessage" class="status error">{{ errorMessage }}</div>
+
+  <div class="cars-grid" *ngIf="!loading && cars.length">
+
+    <div class="car-card" *ngFor="let car of cars">
+      <div class="car-top">
+        <span class="vin-label">VIN</span>
+        <span class="vin-value">{{ car.vin }}</span>
+      </div>
+
+      <div class="car-main">
+        <div class="make">{{ car.make }}</div>
+        <div class="model">{{ car.model }}</div>
+      </div>
+
+      <div class="car-meta">
+        <span class="year">Year: {{ car.yearOfManufacture }}</span>
+        <span class="fuel">{{ car.fuelType }}</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="status" *ngIf="!loading && !cars.length && !errorMessage">
+    No cars found.
+  </div>
+
+</div>

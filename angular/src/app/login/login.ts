@@ -1,71 +1,64 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './login.html',
-  styleUrls: ['./login.css']
+  styleUrl: './login.scss',
 })
-export class LoginComponent {
+export class Login {
 
   loading = false;
   successMessage = '';
   errorMessage = '';
 
+
   loginForm!: FormGroup;
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router
-  ) {
-    this.loginForm = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-    });
+  constructor(private fb:FormBuilder){
+      this.loginForm = this.fb.group({
+        username: ['', Validators.required],
+        password: ['', Validators.required]
+      })
   }
+  http = inject(HttpClient);
+  router = inject(Router)
 
-  submitLogin() {
-    if (this.loginForm.invalid) {
-      this.errorMessage = 'Please enter username and password.';
-      console.warn('Form invalid:', this.loginForm.errors);
+
+  onLogin(){
+    if(this.loginForm.invalid){
+      this.errorMessage = 'Please enter Username and Password';
       return;
     }
-
     this.loading = true;
-    this.errorMessage = '';
-    this.successMessage = '';
-
-    this.authService.login(this.loginForm.value).subscribe({
-      next: (res) => {
-        this.loading = false;
-        this.successMessage = 'Login Successful!';
-        console.log('Login success:', res);
-        // navigate to dashboard after successful login
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 500);
-      },
-      error: (err) => {
-        this.loading = false;
-        this.errorMessage = 'Invalid username or password.';
-        console.error('Login error:', err);
-        // Keep error visible for 3 seconds before clearing
-        setTimeout(() => {
-          this.errorMessage = '';
-        }, 3000);
-      }
-    });
+    const formValue = this.loginForm.value;
+      this.http.post("http://localhost:8080/user/login", formValue, {responseType: 'text'}).subscribe({
+        next: (res) =>{
+          if(res){
+            this.loading = false;
+            this.successMessage = 'Login successful';
+            alert("login successfully");
+            localStorage.setItem("auth_token", res);
+            setTimeout( () => {
+                this.router.navigateByUrl("/dashboard");
+            }, 2000);
+            
+          }
+            console.log(res)
+        }, error: () =>{
+          this.loading = false;
+          this.errorMessage = 'Invalid Credentials';
+          setTimeout( () => {
+            this.errorMessage = '';
+          }, 3000);
+            alert("Invalid Credentials");
+        }
+      })
   }
 
-  forgotPassword() {
-    // kept for backward compatibility, but routing now handled by ForgotPassword page
-    this.router.navigate(['/forgot-password']);
-  }
+
 }

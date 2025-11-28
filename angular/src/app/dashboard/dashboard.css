@@ -1,5 +1,0 @@
-.dashboard-wrap { display:flex; align-items:center; justify-content:center; padding:30px; }
-.card { width:100%; max-width:720px; background:#fff; border-radius:12px; padding:20px; box-shadow:0 12px 30px rgba(2,6,23,0.06); }
-.actions { display:flex; gap:12px; margin-top:12px; }
-.actions button { padding:10px 14px; border-radius:8px; border:none; background:linear-gradient(90deg,#06b6d4,#3b82f6); color:white; font-weight:600; }
-.btn-logout { margin-top:18px; background:transparent; color:#b91c1c; border:1px solid #fee2e2; padding:8px 12px; border-radius:8px; }
