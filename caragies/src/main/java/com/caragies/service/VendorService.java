@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,18 +24,25 @@ public class VendorService {
 
     public List<ServiceRequestDto> viewAllRequest(){
         return serviceRequestRepository.findByRequestedStatus().stream()
-                .map(serviceRequest ->
-                        new ServiceRequestDto(serviceRequest.getId(),
-                                serviceRequest.getCar().getVin(),
-                                serviceRequest.getUser().getName(),
-                                serviceRequest.getDescription(),
-                                serviceRequest.getRequestedAt(),
-                                serviceRequest.getScheduledAt(),
-                                serviceRequest.getCompletedAt(),
-                                serviceRequest.getStatus(),
-                                serviceRequest.getLocation(),
-                                serviceRequest.getEstimatedCost(),
-                                serviceRequest.getFinalCost()))
+                .map(sr -> {
+                    Integer id = sr.getId();
+                    String vin = Optional.ofNullable(sr.getCar()).map(c -> c.getVin()).orElse(null);
+                    Integer carId = Optional.ofNullable(sr.getCar()).map( carid -> carid.getId()).orElse(null);
+                    String userName = Optional.ofNullable(sr.getUser()).map(u -> u.getName()).orElse(null);
+
+                    return new ServiceRequestDto(
+                            id, vin, carId, userName,
+                            sr.getDescription(),
+                            sr.getRequestedAt(),
+                            sr.getScheduledAt(),
+                            sr.getCompletedAt(),
+                            sr.getStatus(),
+                            sr.getLocation(),
+                            sr.getEstimatedCost(),
+                            sr.getFinalCost()
+                    );
+                })
                 .collect(Collectors.toList());
     }
+
 }

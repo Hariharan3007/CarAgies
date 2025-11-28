@@ -14,6 +14,7 @@ public class ServiceRequestDto {
 
     private Integer id;
     private String carVin;
+    private Integer car_id;
     private String requester; // requester
     private String description;
     private LocalDate requestedAt;

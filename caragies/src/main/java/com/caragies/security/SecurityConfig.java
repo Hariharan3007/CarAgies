@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -14,28 +15,30 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @AllArgsConstructor
 public class SecurityConfig {
-
     private SecurityService securityService;
     private JwtFilter jwtFilter;
-
     @Bean
-    public ModelMapper getModelMapper(){
+    public ModelMapper getModelMapper()
+    {
         return new ModelMapper();
     }
-
     @Bean
-    public SecurityFilterChain getFilterChain(HttpSecurity security) throws Exception {
+    public SecurityFilterChain getFilterChain(HttpSecurity security) throws Exception
+    {
         return security
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers(
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll().requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
@@ -46,7 +49,9 @@ public class SecurityConfig {
                                 "/user/login",
                                 "/vendor/login",
                                 "/user/verify-code",
-                                "/user/otp"
+                                "/user/otp",
+                                "/ai/models",
+                                "ai/llm/about"
                         ).permitAll()
 
                         // 👇 use SAME style everywhere
@@ -59,12 +64,10 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
     @Bean
     public AuthenticationManager getManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
     @Bean
     public PasswordEncoder getPasswordEncoder(){
         return new BCryptPasswordEncoder();
@@ -92,5 +95,16 @@ public class SecurityConfig {
             }
         };
     }
-
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOriginPattern("*"); // or explicit origin e.g. "http://localhost:4200"
+        config.addAllowedHeader("*"); // or list: "Authorization","Content-Type"
+        config.addExposedHeader("Authorization");
+        config.addAllowedMethod("*");
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
 }

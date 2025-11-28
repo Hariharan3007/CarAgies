@@ -27,6 +27,7 @@ public class Users {
     private String password;
 
     @Email
+    @Column(nullable = false, unique = true)
     private String email;
 
     private Long phone;
@@ -35,6 +36,7 @@ public class Users {
 
     @OneToMany(mappedBy = "users")
     private List<Car> car;
-    private String otp;
+
+
 
 }

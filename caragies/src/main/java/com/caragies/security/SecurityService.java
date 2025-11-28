@@ -23,17 +23,19 @@ public class SecurityService implements UserDetailsService {
         Users users = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        // Store roles in DB as "USER", "ADMIN", "VENDOR"
-        String role = users.getRole().toUpperCase();  // "ADMIN"
+        // DB value: USER, ADMIN, VENDOR
+        String role = users.getRole().toUpperCase();
 
-        SimpleGrantedAuthority grantedAuthority =
-                new SimpleGrantedAuthority(role);      // authority = "ADMIN"
+        // Spring requires ROLE_ prefix for hasRole()
+        SimpleGrantedAuthority authority =
+                new SimpleGrantedAuthority("ROLE_" + role);
 
         return new org.springframework.security.core.userdetails.User(
                 users.getUsername(),
                 users.getPassword(),
-                Collections.singleton(grantedAuthority)
+                Collections.singleton(authority)
         );
     }
+
 
 }

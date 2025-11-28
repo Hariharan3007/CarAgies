@@ -33,4 +33,5 @@ public class VehicleHealthReport {
     @OneToOne
     private  Car car;
 
-}
+    }
+

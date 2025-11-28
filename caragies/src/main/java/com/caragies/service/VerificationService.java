@@ -1,14 +1,21 @@
 package com.caragies.service;
+
 import com.caragies.entitymodel.VerificationCode;
 import com.caragies.repositories.VerificationCodeRepository;
 import org.springframework.stereotype.Service;
-import java.time.Instant;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.Duration;
+import java.time.Instant;
+import java.util.Optional;
 import java.util.Random;
+
 @Service
 public class VerificationService {
+
     private final VerificationCodeRepository codeRepo;
     private final EmailService emailService;
+
     public VerificationService(VerificationCodeRepository codeRepo, EmailService emailService) {
         this.codeRepo = codeRepo;
         this.emailService = emailService;
@@ -20,12 +27,23 @@ public class VerificationService {
         return String.valueOf(n);
     }
 
+    /**
+     * Creates a verification code and sends it. Runs inside a transaction so
+     * delete + save are atomic.
+     *
+     * Note: It's usually better to send the email AFTER the transaction commits
+     * (so the user doesn't get a code that wasn't persisted). For that you can
+     * use TransactionSynchronizationManager or publish an event and send the email in an async listener.
+     */
+    @Transactional
     public void createAndSendCode(String email) {
-        // remove old codes (optional)
+        // remove old codes inside same transaction
         codeRepo.deleteByEmail(email);
+
         String code = generate6Digit();
         Instant now = Instant.now();
         Instant expires = now.plus(Duration.ofMinutes(10)); // expiry 10 minutes
+
         VerificationCode vc = VerificationCode.builder()
                 .email(email)
                 .code(code)
@@ -33,22 +51,31 @@ public class VerificationService {
                 .expiresAt(expires)
                 .used(false)
                 .build();
+
         codeRepo.save(vc);
+
+        // send email - consider sending after commit to avoid sending if tx rolls back
         String text = "Your verification code is: " + code + "\nThis code expires at: " + expires.toString();
         emailService.sendPlainText(email, "Your verification code", text);
     }
 
+    /**
+     * Verifies a code. Runs in a transaction so checking, marking used, and saving happen atomically.
+     * Uses the repository's findTopBy... to avoid NonUniqueResultException.
+     */
+    @Transactional
     public boolean verifyCode(String email, String code) {
-        var opt = codeRepo.findTopByEmailAndCodeOrderByCreatedAtDesc(email, code);
-        if (opt.isEmpty())
-            return false;
+        Optional<VerificationCode> opt = codeRepo.findTopByEmailAndCodeOrderByCreatedAtDesc(email, code);
+        if (opt.isEmpty()) return false;
+
         VerificationCode vc = opt.get();
-        if (vc.isUsed())
-            return false;
-        if (vc.getExpiresAt().isBefore(Instant.now()))
-            return false;
+
+        if (vc.isUsed()) return false;
+        if (vc.getExpiresAt().isBefore(Instant.now())) return false;
+
         vc.setUsed(true);
-        codeRepo.save(vc);
+        codeRepo.save(vc); // persists change within transaction
+
         return true;
     }
 }
