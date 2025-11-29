@@ -1,18 +1,20 @@
 package com.caragies.service;
 
+import org.springframework.stereotype.Service;
+
 import com.caragies.entitymodel.Car;
 import com.caragies.entitymodel.VehicleHealthReport;
-import com.caragies.repositories.CarRepo;
+import com.caragies.repositories.CarRepository;
 import com.caragies.repositories.HealthReport;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class VehicleHealthReportService {
 
     private final HealthReport reportRepository;
-    private CarRepo car;
+    private final CarRepository car;
     private final VehicleHealthReportEmailService emailService;
 
     public VehicleHealthReport createReport(VehicleHealthReport report) {

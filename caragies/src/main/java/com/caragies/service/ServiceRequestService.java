@@ -1,19 +1,21 @@
 package com.caragies.service;
 
-import com.caragies.entitymodel.Car;
-import com.caragies.entitymodel.Users;
-import com.caragies.repositories.CarRepo;
-import com.caragies.repositories.ServiceRequestRepository;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.stereotype.Service;
+
+import com.caragies.entitymodel.Car;
 import com.caragies.entitymodel.ServiceRequest;
+import com.caragies.entitymodel.Users;
+import com.caragies.repositories.CarRepository;
+import com.caragies.repositories.ServiceRequestRepository;
+
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 @Service
 @Data
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ServiceRequestService {
-  private   ServiceRequestRepository serviceRequestRepository;
-  private CarRepo carRepo;
+  private  final ServiceRequestRepository serviceRequestRepository;
+  private final CarRepository carRepo;
     public void serviceRequest(ServiceRequest serviceRequest) {
         Car car;
         if (serviceRequest == null) {

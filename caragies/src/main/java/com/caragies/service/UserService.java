@@ -10,7 +10,7 @@ import com.caragies.location.LocationAccess;
 import com.caragies.repositories.ServiceRequestRepository;
 import com.caragies.repositories.UserRepository;
 import com.caragies.security.JwtUtil;
-import com.caragies.service_interface.CarRepository;
+import com.caragies.repositories.CarRepository;
 import com.caragies.service_interface.UserServiceInterface;
 import lombok.AllArgsConstructor;
 import org.apache.catalina.mapper.Mapper;
