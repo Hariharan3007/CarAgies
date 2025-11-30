@@ -26,7 +26,6 @@ import java.util.Map;
 @RequestMapping("/user")
 @AllArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200")
-
 public class UserController {
 
     private UserService userService;
@@ -41,6 +40,7 @@ public class UserController {
     public String signup(@RequestBody Users user){
         return userService.signup(user);
     }
+
     @PostMapping("/login")
     public String login(@RequestBody Users user){
         return   userService.login(user);
