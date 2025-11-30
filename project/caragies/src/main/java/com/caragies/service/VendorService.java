@@ -1,11 +1,13 @@
 package com.caragies.service;
 
 import com.caragies.entitydto.ServiceRequestDto;
+import com.caragies.entitymodel.ServiceRequest;
 import com.caragies.entitymodel.Users;
 import com.caragies.repositories.ServiceRequestRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,4 +47,55 @@ public class VendorService {
                 .collect(Collectors.toList());
     }
 
+    public String acceptRequest(Integer id, String scheduled) {
+        System.out.println("checking request id");
+        Optional<ServiceRequest> serviceRequest = serviceRequestRepository.findById(id);
+        if(serviceRequest.isPresent()){
+            System.out.println("setting schedule");
+            ServiceRequest req = serviceRequest.get();
+            req.setScheduledAt(LocalDate.parse(scheduled));
+            req.setStatus("Scheduled");
+            serviceRequestRepository.save(req);
+            return "Accepted";
+        }
+        System.out.println("not found");
+        return "Not Found";
+    }
+
+    public ServiceRequestDto viewRequestById(Integer id) {
+        ServiceRequest req = serviceRequestRepository.findById(id).get();
+        return new ServiceRequestDto(req.getId(),
+                req.getCar().getVin(),
+                req.getCar().getId(),
+                req.getUser().getName(),
+                req.getDescription(),
+                req.getRequestedAt(),
+                req.getScheduledAt(),
+                req.getCompletedAt(),
+                req.getStatus(),
+                req.getLocation(),
+                req.getEstimatedCost(),
+                req.getFinalCost());
+    }
+
+    public List<ServiceRequestDto> viewScheduledRequests() {
+       return serviceRequestRepository.findByScheduledStatus().stream().map(
+               req -> {
+                   return new ServiceRequestDto(
+                           req.getId(),
+                           req.getCar().getVin(),
+                           req.getCar().getId(),
+                           req.getUser().getName(),
+                           req.getDescription(),
+                           req.getRequestedAt(),
+                           req.getScheduledAt(),
+                           req.getCompletedAt(),
+                           req.getStatus(),
+                           req.getLocation(),
+                           req.getEstimatedCost(),
+                           req.getFinalCost()
+                   );
+               })
+        .collect(Collectors.toList());
+    }
 }

@@ -71,7 +71,9 @@ public class UserService implements UserServiceInterface {
         try {
             if (auth.isAuthenticated()) {
                 String role = userRepository.findByUsername(username).get().getRole();
-                return jwtUtil.createToken(username, role);
+                if(role.equals(user.getRole())){
+                    return jwtUtil.createToken(username, role);
+                }
             }
         }catch (Exception e){
             return "Invalid Credentials";
@@ -101,7 +103,8 @@ public class UserService implements UserServiceInterface {
                 car.getId(),
                 car.getVin(),
                 car.getMake(),
-                car.getMake(),
+                car.getModel(),
+                car.getFuelType(),
                 car.getYearOfManufacture(),
                 car.getUsers().getName()))
                 .collect(Collectors.toList());
@@ -142,4 +145,19 @@ public class UserService implements UserServiceInterface {
     }
 
 
+
+    public CarDto viewCarById(Integer id) {
+        Optional<Car> car = carRepository.findById(id);
+        if(car.isPresent()){
+            Car validCar = car.get();
+            return new CarDto(validCar.getId(),
+                    validCar.getVin(),
+                    validCar.getMake(),
+                    validCar.getModel(),
+                    validCar.getFuelType(),
+                    validCar.getYearOfManufacture(),
+                    validCar.getUsers().getName());
+        }
+        return null;
+    }
 }

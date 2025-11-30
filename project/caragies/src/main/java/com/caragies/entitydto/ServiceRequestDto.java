@@ -18,8 +18,8 @@ public class ServiceRequestDto {
     private String requester; // requester
     private String description;
     private LocalDate requestedAt;
-    private LocalDateTime scheduledAt;
-    private LocalDateTime completedAt;
+    private LocalDate scheduledAt;
+    private LocalDate completedAt;
     private String status;
     private String location;
     private BigDecimal estimatedCost;

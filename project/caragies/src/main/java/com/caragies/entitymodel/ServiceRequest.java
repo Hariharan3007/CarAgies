@@ -30,9 +30,9 @@ public class ServiceRequest {
 
     private LocalDate requestedAt = LocalDate.now();
 
-    private LocalDateTime scheduledAt;
+    private LocalDate scheduledAt;
 
-    private LocalDateTime completedAt;
+    private LocalDate completedAt;
 
     private BigDecimal estimatedCost;
 

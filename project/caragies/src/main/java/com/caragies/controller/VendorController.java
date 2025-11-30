@@ -31,6 +31,22 @@ public class VendorController {
     public List<ServiceRequestDto> viewAllRequest(){
         return vendorService.viewAllRequest();
     }
+
+    @GetMapping("/request/viewById/{id}")
+    public ServiceRequestDto viewRequestById(@PathVariable Integer id){
+        return vendorService.viewRequestById(id);
+    }
+
+    @PostMapping("/requests/{id}/accept")
+    public String acceptRequest(@PathVariable Integer id, @RequestBody String scheduled){
+        System.out.println("accept Request method");
+        return vendorService.acceptRequest(id, scheduled);
+    }
+
+    @GetMapping("/view/scheduled/requests")
+    public List<ServiceRequestDto> viewScheduledRequest(){
+        return vendorService.viewScheduledRequests();
+    }
     @PostMapping("/healthreport")
    public String healthreport(@RequestBody VehicleHealthReport detail,@RequestParam Integer id)
     {

@@ -12,7 +12,10 @@ import com.caragies.service.UserService;
 import com.caragies.service.VerificationService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/user")
 @AllArgsConstructor
@@ -41,9 +45,10 @@ public class UserController {
         return userService.signup(user);
     }
 
+
     @PostMapping("/login")
     public String login(@RequestBody Users user){
-        return   userService.login(user);
+        return userService.login(user);
     }
     @GetMapping("/profile/view")
     public UserDto viewProfile(){
@@ -58,6 +63,11 @@ public class UserController {
     public List<CarDto> viewMyCars()
     {
         return userService.viewMyCars(getUsername());
+    }
+
+    @GetMapping("/car/viewById/{id}")
+    public CarDto viewCarById(@PathVariable Integer id){
+        return userService.viewCarById(id);
     }
 
     @PostMapping("/car/request/{id}")
@@ -84,6 +94,7 @@ public class UserController {
         verificationService.createAndSendCode(email);
         return "successfully mail otp sent to the " + email;
     }
+
     @PostMapping("/verify-code")
     public ResponseEntity<?> verifyCodeAndIssueToken(@RequestBody Map<String,String> body) {
         String email = body.get("email");
