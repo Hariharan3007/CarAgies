@@ -4,16 +4,19 @@ import com.caragies.entitymodel.Car;
 import com.caragies.entitymodel.VehicleHealthReport;
 import com.caragies.repositories.CarRepo;
 import com.caragies.repositories.HealthReport;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class VehicleHealthReportService {
 
-    private final HealthReport reportRepository;
+    private HealthReport reportRepository;
     private CarRepo car;
-    private final VehicleHealthReportEmailService emailService;
+    private VehicleHealthReportEmailService emailService;
 
     public VehicleHealthReport createReport(VehicleHealthReport report) {
         VehicleHealthReport saved = reportRepository.save(report);
@@ -22,8 +25,11 @@ public class VehicleHealthReportService {
     }
 
     public void addReport(VehicleHealthReport detail,Integer id) {
-       Car carid=car.findById(id).get();
-       detail.setCar(carid);
-        reportRepository.save(detail);
+       Optional<Car> carid=car.findById(id);
+       if(carid.isPresent()){
+           System.out.println("car is present" + id);
+           detail.setCar(carid.get());
+           reportRepository.save(detail);
+       }
     }
 }

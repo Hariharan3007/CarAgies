@@ -19,4 +19,7 @@ public interface ServiceRequestRepository extends JpaRepository<ServiceRequest, 
 
     @Query(value = "select * from service_request where status ='Scheduled'", nativeQuery = true)
     List<ServiceRequest> findByScheduledStatus();
+
+    @Query(value = "select * from service_request where status ='In-Process'", nativeQuery = true)
+    List<ServiceRequest> findByProcessStatus();
 }

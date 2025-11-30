@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface CarRepo extends JpaRepository<Car,Integer> {
     Optional<Car> findByVin(String vin);
 
+    Optional<Car> findById(Integer id);
+
     @Query(value = "select * from car where users_id =:id", nativeQuery = true)
     List<Car> findByUsersId(Integer id);
 }

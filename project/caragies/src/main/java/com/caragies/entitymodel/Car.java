@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -28,5 +30,9 @@ public class Car {
 
     @ManyToOne
     private Users users;
+
+    @OneToMany(mappedBy = "car")
+    private List<VehicleHealthReport> vehicleHealthReportsList;
+
 
 }

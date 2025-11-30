@@ -88,8 +88,8 @@ public class UserController {
                return auth.getName();
         }
 
-    @GetMapping("/otp")
-    public String optsent(@RequestParam String email) {
+    @PostMapping("/otp")
+    public String optsent(@RequestBody String email) {
        // String email=userRepo.findFirstByEmailOrderByIdDesc(email)
         verificationService.createAndSendCode(email);
         return "successfully mail otp sent to the " + email;

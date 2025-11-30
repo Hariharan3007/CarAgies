@@ -39,7 +39,6 @@ public class VendorController {
 
     @PostMapping("/requests/{id}/accept")
     public String acceptRequest(@PathVariable Integer id, @RequestBody String scheduled){
-        System.out.println("accept Request method");
         return vendorService.acceptRequest(id, scheduled);
     }
 
@@ -47,9 +46,29 @@ public class VendorController {
     public List<ServiceRequestDto> viewScheduledRequest(){
         return vendorService.viewScheduledRequests();
     }
-    @PostMapping("/healthreport")
+
+    @GetMapping("view/process/requests")
+    public List<ServiceRequestDto> viewLiveRequest(){
+        return vendorService.viewLiveRequest();
+    }
+
+    @GetMapping("request/process/{id}")
+    public void processRequestById(@PathVariable Integer id){
+        System.out.println("controller hit");
+        System.out.println("id " + id);
+        vendorService.processRequestById(id);
+    }
+
+    @GetMapping("request/complete/{id}")
+    public String completeRequest(@PathVariable Integer id){
+
+        return vendorService.completeRequest(id);
+    }
+
+   @PostMapping("/healthreport")
    public String healthreport(@RequestBody VehicleHealthReport detail,@RequestParam Integer id)
     {
+        System.out.println(id);
         report.addReport(detail,id);
         return "Successfully added";
     }

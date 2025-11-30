@@ -48,10 +48,8 @@ public class VendorService {
     }
 
     public String acceptRequest(Integer id, String scheduled) {
-        System.out.println("checking request id");
         Optional<ServiceRequest> serviceRequest = serviceRequestRepository.findById(id);
         if(serviceRequest.isPresent()){
-            System.out.println("setting schedule");
             ServiceRequest req = serviceRequest.get();
             req.setScheduledAt(LocalDate.parse(scheduled));
             req.setStatus("Scheduled");
@@ -97,5 +95,50 @@ public class VendorService {
                    );
                })
         .collect(Collectors.toList());
+    }
+
+    public void processRequestById(Integer id) {
+        Optional<ServiceRequest> req = serviceRequestRepository.findById(id);
+        if(req.isPresent()){
+            ServiceRequest validReq = req.get();
+            validReq.setStatus("In-Process");
+            serviceRequestRepository.save(validReq);
+        }
+
+    }
+
+    public List<ServiceRequestDto> viewLiveRequest() {
+        return serviceRequestRepository.findByProcessStatus().stream().map(
+                        req -> {
+                            return new ServiceRequestDto(
+                                    req.getId(),
+                                    req.getCar().getVin(),
+                                    req.getCar().getId(),
+                                    req.getUser().getName(),
+                                    req.getDescription(),
+                                    req.getRequestedAt(),
+                                    req.getScheduledAt(),
+                                    req.getCompletedAt(),
+                                    req.getStatus(),
+                                    req.getLocation(),
+                                    req.getEstimatedCost(),
+                                    req.getFinalCost()
+                            );
+                        })
+                .collect(Collectors.toList());
+    }
+
+    public String completeRequest(Integer id) {
+
+        Optional<ServiceRequest> req = serviceRequestRepository.findById(id);
+        if(req.isPresent()){
+
+            ServiceRequest validReq = req.get();
+            validReq.setStatus("Completed");
+            validReq.setCompletedAt(LocalDate.now());
+            serviceRequestRepository.save(validReq);
+
+        }
+        return "Completed";
     }
 }
