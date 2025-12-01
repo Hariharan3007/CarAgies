@@ -45,6 +45,7 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers(
                                 "/admin/signup",
+                                "/admin/login",
                                 "/user/signup",
                                 "/user/login",
                                 "/vendor/login",

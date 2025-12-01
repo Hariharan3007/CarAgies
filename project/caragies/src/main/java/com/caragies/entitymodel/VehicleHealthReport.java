@@ -30,7 +30,6 @@ public class VehicleHealthReport {
     private Integer brakesScore;
     private Integer electricalScore;
     private BigDecimal estimatedRepairCost;
-
     @ManyToOne
     private  Car car;
 

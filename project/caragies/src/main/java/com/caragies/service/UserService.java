@@ -71,7 +71,8 @@ public class UserService implements UserServiceInterface {
         try {
             if (auth.isAuthenticated()) {
                 String role = userRepository.findByUsername(username).get().getRole();
-                if(role.equals(user.getRole())){
+                System.out.println(role);
+                if(role.equalsIgnoreCase(user.getRole())){
                     return jwtUtil.createToken(username, role);
                 }
             }
