@@ -36,7 +36,7 @@ public class VehicleHealthReportPdfGenerator {
             document.add(new Paragraph("Engine Score: " + report.getEngineScore()));
             document.add(new Paragraph("Brakes Score: " + report.getBrakesScore()));
             document.add(new Paragraph("Electrical Score: " + report.getElectricalScore()));
-            document.add(new Paragraph("Estimated Repair Cost: " + report.getEstimatedRepairCost()));
+            document.add(new Paragraph("Total Cost: " + report.getFinalCost()));
             document.add(new Paragraph(" "));
 
             // Summary

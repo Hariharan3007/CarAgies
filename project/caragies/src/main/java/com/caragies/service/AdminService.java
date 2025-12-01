@@ -7,9 +7,9 @@ import com.caragies.repositories.ServiceRequestRepository;
 import com.caragies.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -18,9 +18,11 @@ import java.util.stream.Collectors;
 public class AdminService {
     private ServiceRequestRepository serviceRequestRepository;
     private UserRepository userRepository;
+
     public List<ServiceRequest> getRequest() {
         return serviceRequestRepository.findAll();
     }
+
     public String removeUser(String userName)
     {
         Optional<Users> user=userRepository.findByUsername(userName);
@@ -112,6 +114,13 @@ public class AdminService {
                 .finalCost(entity.getFinalCost())
                 .build()).collect(Collectors.toList());
     }
+
+    public Map<String, Long> getAllRequests() {
+            return serviceRequestRepository.findAll().stream()
+                    .collect(Collectors.groupingBy(a->  a.getStatus(), Collectors.counting()));
+
+    }
+
 
 }
 

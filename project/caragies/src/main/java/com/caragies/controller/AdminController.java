@@ -4,7 +4,6 @@ import com.caragies.entitydto.ServiceRequestDto;
 import com.caragies.entitydto.UserDto;
 import com.caragies.entitymodel.ServiceRequest;
 import com.caragies.entitymodel.Users;
-import com.caragies.repositories.ServiceRequestRepository;
 import com.caragies.service.AdminService;
 import com.caragies.service.UserService;
 import lombok.AllArgsConstructor;
@@ -12,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -54,7 +54,7 @@ public class AdminController {
     {
         return ResponseEntity.ok( adminService.requestScheduled());
     }
-    @GetMapping("status/progress")
+    @GetMapping("status/process")
     public ResponseEntity<List<ServiceRequestDto>> progressRequest()
     {
         return ResponseEntity.ok( adminService.requestInProcess());
@@ -63,5 +63,10 @@ public class AdminController {
     public ResponseEntity<List<ServiceRequestDto>> scheduledCompleted()
     {
         return ResponseEntity.ok( adminService.requestCompleted());
+    }
+
+    @GetMapping("getAllStatus")
+    public Map<String,Long> getAllRequests(){
+        return adminService.getAllRequests();
     }
 }

@@ -7,6 +7,7 @@ import com.caragies.repositories.ServiceRequestRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -47,11 +48,13 @@ public class VendorService {
                 .collect(Collectors.toList());
     }
 
-    public String acceptRequest(Integer id, String scheduled) {
+    public String acceptRequest(Integer id, ServiceRequest request) {
         Optional<ServiceRequest> serviceRequest = serviceRequestRepository.findById(id);
         if(serviceRequest.isPresent()){
             ServiceRequest req = serviceRequest.get();
-            req.setScheduledAt(LocalDate.parse(scheduled));
+            System.out.println(request.getScheduledAt());
+            req.setScheduledAt(request.getScheduledAt());
+            req.setEstimatedCost(request.getEstimatedCost());
             req.setStatus("Scheduled");
             serviceRequestRepository.save(req);
             return "Accepted";
@@ -101,7 +104,7 @@ public class VendorService {
         Optional<ServiceRequest> req = serviceRequestRepository.findById(id);
         if(req.isPresent()){
             ServiceRequest validReq = req.get();
-            validReq.setStatus("In-Process");
+            validReq.setStatus("Processing");
             serviceRequestRepository.save(validReq);
         }
 
@@ -140,5 +143,9 @@ public class VendorService {
 
         }
         return "Completed";
+    }
+
+    public void updateFinalCost(Integer serviceId, BigDecimal finalCost) {
+        serviceRequestRepository.findById(serviceId).get().setFinalCost(finalCost);
     }
 }

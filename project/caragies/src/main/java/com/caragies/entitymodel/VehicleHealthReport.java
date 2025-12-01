@@ -29,7 +29,7 @@ public class VehicleHealthReport {
     private Integer engineScore;
     private Integer brakesScore;
     private Integer electricalScore;
-    private BigDecimal estimatedRepairCost;
+    private BigDecimal finalCost;
     @ManyToOne
     private  Car car;
 

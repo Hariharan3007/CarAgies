@@ -1,6 +1,7 @@
 package com.caragies.controller;
 
 import com.caragies.entitydto.ServiceRequestDto;
+import com.caragies.entitymodel.ServiceRequest;
 import com.caragies.entitymodel.Users;
 import com.caragies.entitymodel.VehicleHealthReport;
 import com.caragies.service.VehicleHealthReportService;
@@ -10,6 +11,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -38,8 +40,8 @@ public class VendorController {
     }
 
     @PostMapping("/requests/{id}/accept")
-    public String acceptRequest(@PathVariable Integer id, @RequestBody String scheduled){
-        return vendorService.acceptRequest(id, scheduled);
+    public String acceptRequest(@PathVariable Integer id, @RequestBody ServiceRequest request){
+        return vendorService.acceptRequest(id, request);
     }
 
     @GetMapping("/view/scheduled/requests")
@@ -65,11 +67,11 @@ public class VendorController {
         return vendorService.completeRequest(id);
     }
 
-   @PostMapping("/healthreport")
-   public String healthreport(@RequestBody VehicleHealthReport detail,@RequestParam Integer id)
-    {
-        System.out.println(id);
-        report.addReport(detail,id);
+   @PostMapping("/healthreport/{car_id}/{service_id}")
+   public String healthreport(@RequestBody VehicleHealthReport detail,@PathVariable Integer car_id, @PathVariable Integer service_id)
+   {
+       vendorService.updateFinalCost(service_id, detail.getFinalCost());
+        report.addReport(detail,car_id);
         return "Successfully added";
     }
 }
